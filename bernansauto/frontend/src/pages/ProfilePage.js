@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
 import { api } from '../api';
 import '../styles/ProfilePage.css';
@@ -10,10 +10,36 @@ function resolveMediaUrl(url) {
   return `http://127.0.0.1:8000${url}`;
 }
 
+const APPLICATION_STATUS_CLASS = {
+  новая: 'status-new',
+  в_работе: 'status-progress',
+  ожидает_клиента: 'status-waiting',
+  выполнена: 'status-done',
+  отменена: 'status-cancelled',
+};
+
+function formatApplicationDate(iso) {
+  if (!iso) return '—';
+  try {
+    return new Date(iso).toLocaleString('ru-RU', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return iso;
+  }
+}
+
 export default function ProfilePage() {
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('applications');
+  const [activeTab, setActiveTab] = useState(location.state?.tab || 'applications');
+  const [applications, setApplications] = useState([]);
+  const [applicationsLoading, setApplicationsLoading] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
@@ -125,6 +151,61 @@ export default function ProfilePage() {
     };
   }, [user?.id]);
 
+  useEffect(() => {
+    if (!user?.id) {
+      setApplications([]);
+      return;
+    }
+
+    let isMounted = true;
+    const loadApplications = async () => {
+      setApplicationsLoading(true);
+      try {
+        const [carRes, motoRes] = await Promise.all([
+          api.get('evaluations/car-applications/').catch(() => ({ data: [] })),
+          api.get('evaluations/moto-applications/').catch(() => ({ data: [] })),
+        ]);
+        if (!isMounted) return;
+
+        const carApps = (Array.isArray(carRes.data) ? carRes.data : []).map((app) => ({
+          ...app,
+          vehicleKind: 'car',
+          vehicle_title: app.car_title,
+          vehicle_slug: app.car_slug,
+        }));
+        const motoApps = (Array.isArray(motoRes.data) ? motoRes.data : []).map((app) => ({
+          ...app,
+          vehicleKind: 'moto',
+          vehicle_title: app.motorcycle_title,
+          vehicle_slug: app.motorcycle_slug,
+        }));
+
+        const merged = [...carApps, ...motoApps].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at),
+        );
+        setApplications(merged);
+      } catch {
+        if (!isMounted) return;
+        setApplications([]);
+      } finally {
+        if (isMounted) setApplicationsLoading(false);
+      }
+    };
+
+    loadApplications();
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.id]);
+
+  const applicationsCount = useMemo(() => applications.length, [applications]);
+
+  useEffect(() => {
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state?.tab]);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -223,8 +304,52 @@ export default function ProfilePage() {
     if (activeTab === 'applications') {
       return (
         <div className="profile-panel-card">
-          <h2>Заявки</h2>
-          <p className="profile-panel-muted">Пока здесь пусто. Раздел подготовлен для будущего функционала заявок.</p>
+          <h2>Мои заявки</h2>
+          {applicationsLoading && (
+            <p className="profile-panel-muted">Загрузка заявок…</p>
+          )}
+          {!applicationsLoading && applicationsCount === 0 && (
+            <p className="profile-panel-muted">
+              У вас пока нет заявок. Откройте карточку автомобиля или мототехники и нажмите «Оставить заявку».
+            </p>
+          )}
+          {!applicationsLoading && applicationsCount > 0 && (
+            <div className="profile-applications-list">
+              {applications.map((app) => {
+                const detailPath = app.vehicle_slug
+                  ? `${app.vehicleKind === 'moto' ? '/motorcycles' : '/cars'}/${encodeURIComponent(app.vehicle_slug)}`
+                  : null;
+                return (
+                  <article key={`${app.vehicleKind}-${app.id}`} className="profile-application-card">
+                    <div className="profile-application-head">
+                      <div>
+                        <span className="profile-application-kind">
+                          {app.vehicleKind === 'moto' ? 'Мототехника' : 'Автомобиль'}
+                        </span>
+                        {detailPath ? (
+                          <Link to={detailPath} className="profile-application-car">
+                            {app.vehicle_title}
+                          </Link>
+                        ) : (
+                          <div className="profile-application-car">{app.vehicle_title}</div>
+                        )}
+                        <div className="profile-application-type">{app.application_type_display}</div>
+                      </div>
+                      <span
+                        className={`profile-application-status ${APPLICATION_STATUS_CLASS[app.status] || ''}`}
+                      >
+                        {app.status_display}
+                      </span>
+                    </div>
+                    <p className="profile-application-summary">{app.summary}</p>
+                    <time className="profile-application-date" dateTime={app.created_at}>
+                      {formatApplicationDate(app.created_at)}
+                    </time>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       );
     }

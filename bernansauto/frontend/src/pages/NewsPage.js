@@ -4,10 +4,25 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { api } from '../api';
 import '../styles/NewsPage.css';
 
+const DEFAULT_NEWS_IMAGE = `${process.env.PUBLIC_URL || ''}/news.png`;
+
 function resolveMediaUrl(url) {
   if (!url) return null;
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  return `http://127.0.0.1:8000${url}`;
+  const path = url.startsWith('/') ? url : `/${url}`;
+  return `http://127.0.0.1:8000${path}`;
+}
+
+function getNewsImageSrc(photo) {
+  const media = resolveMediaUrl(photo);
+  return media || DEFAULT_NEWS_IMAGE;
+}
+
+function handleNewsImageError(event) {
+  const img = event.currentTarget;
+  if (img.dataset.fallbackApplied === '1') return;
+  img.dataset.fallbackApplied = '1';
+  img.src = DEFAULT_NEWS_IMAGE;
 }
 
 function formatDate(iso) {
@@ -79,14 +94,18 @@ export default function NewsPage() {
           {!loading && !errorText && items.length > 0 && (
             <div className="news-list">
               {items.map((n) => {
-                const img = resolveMediaUrl(n.photo);
+                const img = getNewsImageSrc(n.photo);
+                const alt = n.title || 'Новость Bernans Auto';
                 return (
                   <article key={n.id} className="news-card">
-                    {img && (
-                      <div className="news-card-image-wrap">
-                        <img src={img} alt="" className="news-card-image" />
-                      </div>
-                    )}
+                    <div className="news-card-image-wrap">
+                      <img
+                        src={img}
+                        alt={alt}
+                        className="news-card-image"
+                        onError={handleNewsImageError}
+                      />
+                    </div>
                     <div className="news-card-body">
                       <time className="news-card-date" dateTime={n.published_at}>
                         {formatDate(n.published_at)}

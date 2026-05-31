@@ -1,6 +1,9 @@
 .breadcrumbs {
+  display: block;
+  width: 100%;
   background: #fff;
   border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(20, 122, 143, 0.06);
 }
 
 /* Первый блок под фиксированным хедером: без двойного отступа у main */
