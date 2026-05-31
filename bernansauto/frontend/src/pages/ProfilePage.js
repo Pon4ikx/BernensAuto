@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
+import OnlineCarEvaluationPanel from '../components/OnlineCarEvaluationPanel';
 import { api } from '../api';
 import '../styles/ProfilePage.css';
 
@@ -301,6 +302,10 @@ export default function ProfilePage() {
       setFavoriteMotos((prev) => prev.filter((item) => item.id !== motoId));
     };
 
+    if (activeTab === 'onlineEvaluation') {
+      return <OnlineCarEvaluationPanel />;
+    }
+
     if (activeTab === 'applications') {
       return (
         <div className="profile-panel-card">
@@ -588,6 +593,13 @@ export default function ProfilePage() {
                   onClick={() => setActiveTab('applications')}
                 >
                   Заявки
+                </button>
+                <button
+                  type="button"
+                  className={`profile-tab-btn ${activeTab === 'onlineEvaluation' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('onlineEvaluation')}
+                >
+                  Онлайн-оценка авто
                 </button>
                 <button
                   type="button"

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from cars.models import Car, Motorcycle
@@ -17,6 +18,11 @@ APPLICATION_STATUS_CHOICES = [
     ("ожидает_клиента", "Ожидает ответа клиента"),
     ("выполнена", "Выполнена"),
     ("отменена", "Отменена"),
+]
+
+TRANSMISSION_CHOICES = [
+    ("автомат", "Автомат"),
+    ("механика", "Механика"),
 ]
 
 
@@ -122,3 +128,75 @@ class MotoApplication(models.Model):
         if self.user_id:
             return self.user.get_full_name() or self.user.username
         return "Без имени"
+
+
+class OnlineCarEvaluation(models.Model):
+    """Онлайн-оценка автомобиля клиента."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="online_car_evaluations",
+        verbose_name="Пользователь",
+    )
+    marka = models.CharField(max_length=100, verbose_name="Марка")
+    car_model = models.CharField(max_length=100, verbose_name="Модель")
+    body_type = models.CharField(max_length=50, verbose_name="Кузов")
+    year = models.PositiveIntegerField(verbose_name="Год выпуска")
+    engine_volume = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Объём двигателя (л)",
+    )
+    transmission = models.CharField(
+        max_length=20,
+        choices=TRANSMISSION_CHOICES,
+        verbose_name="Коробка передач",
+    )
+    condition = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        verbose_name="Состояние (из 10)",
+    )
+    comments = models.TextField(blank=True, verbose_name="Комментарии / нюансы")
+    status = models.CharField(
+        max_length=30,
+        choices=APPLICATION_STATUS_CHOICES,
+        default="новая",
+        verbose_name="Статус",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
+    class Meta:
+        db_table = "evaluations_online_car_evaluation"
+        verbose_name = "Онлайн-оценка авто"
+        verbose_name_plural = "Онлайн-оценки авто"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.marka} {self.car_model} ({self.year}) — {self.user}"
+
+
+class OnlineCarEvaluationPhoto(models.Model):
+    """Фотографии к онлайн-оценке."""
+    evaluation = models.ForeignKey(
+        OnlineCarEvaluation,
+        on_delete=models.CASCADE,
+        related_name="photos",
+        verbose_name="Оценка",
+    )
+    photo = models.ImageField(
+        upload_to="evaluations/online_photos/",
+        verbose_name="Фото",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата загрузки")
+
+    class Meta:
+        db_table = "evaluations_online_car_evaluation_photo"
+        verbose_name = "Фото онлайн-оценки"
+        verbose_name_plural = "Фото онлайн-оценок"
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"Фото — {self.evaluation_id}"
+

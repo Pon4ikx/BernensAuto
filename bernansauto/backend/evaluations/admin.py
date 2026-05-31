@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import CarApplication, MotoApplication
+from .models import CarApplication, MotoApplication, OnlineCarEvaluation, OnlineCarEvaluationPhoto
+
+
+class OnlineCarEvaluationPhotoInline(admin.TabularInline):
+    model = OnlineCarEvaluationPhoto
+    extra = 0
+    fields = ("photo", "created_at")
+    readonly_fields = ("created_at",)
 
 
 class ApplicationAdminMixin:
@@ -92,3 +99,40 @@ class MotoApplicationAdmin(ApplicationAdminMixin, admin.ModelAdmin):
         ("Сообщение", {"fields": ("message",)}),
         ("Даты", {"fields": ("created_at",)}),
     )
+
+
+@admin.register(OnlineCarEvaluation)
+class OnlineCarEvaluationAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "marka",
+        "car_model",
+        "year",
+        "transmission",
+        "condition",
+        "status",
+        "created_at",
+    )
+    list_filter = ("status", "transmission", "created_at")
+    search_fields = ("user__username", "marka", "car_model", "body_type", "comments")
+    raw_id_fields = ("user",)
+    readonly_fields = ("created_at",)
+    inlines = [OnlineCarEvaluationPhotoInline]
+    fieldsets = (
+        (None, {"fields": ("user", "status")}),
+        (
+            "Автомобиль",
+            {"fields": ("marka", "car_model", "body_type", "year", "engine_volume", "transmission", "condition")},
+        ),
+        ("Комментарии", {"fields": ("comments",)}),
+        ("Даты", {"fields": ("created_at",)}),
+    )
+
+
+@admin.register(OnlineCarEvaluationPhoto)
+class OnlineCarEvaluationPhotoAdmin(admin.ModelAdmin):
+    list_display = ("id", "evaluation", "photo", "created_at")
+    list_filter = ("created_at",)
+    raw_id_fields = ("evaluation",)
+    readonly_fields = ("created_at",)

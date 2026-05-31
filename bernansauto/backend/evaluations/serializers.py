@@ -3,7 +3,13 @@ from rest_framework import serializers
 from content.models import Contact
 from cars.models import Car, Motorcycle
 
-from .models import APPLICATION_TYPE_CHOICES, CarApplication, MotoApplication
+from .models import (
+    APPLICATION_TYPE_CHOICES,
+    CarApplication,
+    MotoApplication,
+    OnlineCarEvaluation,
+    OnlineCarEvaluationPhoto,
+)
 
 
 def validate_application_extras(app_type, request):
@@ -224,4 +230,73 @@ class MotoApplicationCreateSerializer(ApplicationCreateSerializerMixin, serializ
 
     def create(self, validated_data):
         validated_data = self._finalize_create(validated_data)
+        return super().create(validated_data)
+
+
+class OnlineCarEvaluationPhotoSerializer(serializers.ModelSerializer):
+    photo_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OnlineCarEvaluationPhoto
+        fields = ("id", "photo", "photo_url", "created_at")
+        read_only_fields = fields
+
+    def get_photo_url(self, obj):
+        if not obj.photo:
+            return None
+        request = self.context.get("request")
+        url = obj.photo.url
+        if request:
+            return request.build_absolute_uri(url)
+        return url if url.startswith("/") else f"/{url}"
+
+
+class OnlineCarEvaluationSerializer(serializers.ModelSerializer):
+    status_display = serializers.CharField(source="get_status_display", read_only=True)
+    transmission_display = serializers.CharField(source="get_transmission_display", read_only=True)
+    photos = OnlineCarEvaluationPhotoSerializer(many=True, read_only=True)
+    vehicle_title = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OnlineCarEvaluation
+        fields = (
+            "id",
+            "marka",
+            "car_model",
+            "body_type",
+            "year",
+            "engine_volume",
+            "transmission",
+            "transmission_display",
+            "condition",
+            "comments",
+            "status",
+            "status_display",
+            "vehicle_title",
+            "photos",
+            "created_at",
+        )
+        read_only_fields = fields
+
+    def get_vehicle_title(self, obj):
+        return f"{obj.marka} {obj.car_model} ({obj.year})"
+
+
+class OnlineCarEvaluationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OnlineCarEvaluation
+        fields = (
+            "marka",
+            "car_model",
+            "body_type",
+            "year",
+            "engine_volume",
+            "transmission",
+            "condition",
+            "comments",
+        )
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        validated_data["status"] = "новая"
         return super().create(validated_data)
