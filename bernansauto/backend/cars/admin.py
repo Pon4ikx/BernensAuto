@@ -6,16 +6,42 @@ from .models import Car, Motorcycle, Car_Photo, Moto_Photo, CarFavorite, MotoFav
 
 
 
-class Car_PhotoInline(admin.TabularInline):
+def _photo_inline_preview(obj):
+    if obj.pk and obj.photo:
+        return format_html(
+            '<img src="{}" style="max-height: 80px; max-width: 120px; object-fit: contain; display: block; margin-bottom: 6px;" />'
+            '<span style="font-size: 12px; word-break: break-all;">{}</span>',
+            obj.photo.url,
+            obj.photo.name,
+        )
+    return "—"
+
+
+class PhotoInlineBulkMixin:
+    class Media:
+        js = ("admin/js/photo_bulk_upload.js",)
+
+
+class Car_PhotoInline(PhotoInlineBulkMixin, admin.TabularInline):
     model = Car_Photo
     extra = 0
-    fields = ("photo",)
+    fields = ("photo_preview", "photo")
+    readonly_fields = ("photo_preview",)
+
+    @admin.display(description="Превью")
+    def photo_preview(self, obj):
+        return _photo_inline_preview(obj)
 
 
-class Moto_PhotoInline(admin.TabularInline):
+class Moto_PhotoInline(PhotoInlineBulkMixin, admin.TabularInline):
     model = Moto_Photo
     extra = 0
-    fields = ("photo",)
+    fields = ("photo_preview", "photo")
+    readonly_fields = ("photo_preview",)
+
+    @admin.display(description="Превью")
+    def photo_preview(self, obj):
+        return _photo_inline_preview(obj)
 
 
 @admin.register(Car)

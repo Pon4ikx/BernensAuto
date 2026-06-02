@@ -20,10 +20,15 @@ class Contact(models.Model):
 
 
 class News(models.Model):
-    """Новости: заголовок, текст, фото (строка), дата_публикации."""
+    """Новости: заголовок, текст, фото, дата публикации."""
     title = models.CharField(max_length=300, verbose_name="Заголовок")
     text = models.TextField(verbose_name="Текст")
-    photo = models.CharField(max_length=500, blank=True, verbose_name="Фото")
+    photo = models.ImageField(
+        upload_to="news/photos/",
+        blank=True,
+        null=True,
+        verbose_name="Фото",
+    )
     published_at = models.DateTimeField(verbose_name="Дата публикации")
 
     class Meta:

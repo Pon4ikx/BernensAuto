@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import '../styles/MainPage.css';
 import '../styles/CarsPage.css';
 import '../styles/Breadcrumbs.css';
 import SiteHeader from '../components/SiteHeader';
+import { formatMotoEngineVolume } from '../utils/motoFormat';
 
 function resolveMediaUrl(url) {
   if (!url) return null;
@@ -14,6 +15,7 @@ function resolveMediaUrl(url) {
 
 export default function MotorcycleDetailPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [moto, setMoto] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -65,6 +67,11 @@ export default function MotorcycleDetailPage() {
 
   const openAuthPanel = () => {
     window.dispatchEvent(new CustomEvent('open-auth-panel', { detail: { tab: 'login' } }));
+  };
+
+  const handleApplication = () => {
+    if (!moto) return;
+    navigate(`/request-moto/${moto.id}`);
   };
 
   const toggleFavorite = async () => {
@@ -209,13 +216,15 @@ export default function MotorcycleDetailPage() {
                       {moto.engine_volume && (
                         <div>
                           <div className="car-detail-spec-label">Объём двигателя</div>
-                          <div className="car-detail-spec-value">{Number(moto.engine_volume)} л</div>
+                          <div className="car-detail-spec-value">{formatMotoEngineVolume(moto.engine_volume)}</div>
                         </div>
                       )}
                     </div>
 
                     <div className="car-detail-actions">
-                      <button type="button" className="btn-primary">Оставить заявку</button>
+                      <button type="button" className="btn-primary" onClick={handleApplication}>
+                        Оставить заявку
+                      </button>
                       <button
                         type="button"
                         className={`btn-outline detail-favorite-btn ${isFavorite ? 'active' : ''}`}
@@ -224,7 +233,6 @@ export default function MotorcycleDetailPage() {
                         <span className="detail-favorite-icon">{isFavorite ? '★' : '☆'}</span>
                         <span className="detail-favorite-label">{isFavorite ? 'В избранном' : 'В избранное'}</span>
                       </button>
-                      <button type="button" className="btn-outline detail-secondary-btn">Уточнить наличие</button>
                     </div>
                   </div>
                 </div>

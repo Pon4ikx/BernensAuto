@@ -8,11 +8,15 @@
   padding-bottom: 48px;
 }
 
+.car-request-container {
+  padding-top: 0;
+}
+
 .car-request-hero {
   background: linear-gradient(135deg, rgba(25, 149, 173, 0.14), rgba(20, 122, 143, 0.12));
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  padding: calc(var(--site-header-offset) + 22px) 24px 22px;
+  padding: 22px 24px;
   box-shadow: 0 8px 22px rgba(20, 122, 143, 0.12);
   margin-bottom: 1.25rem;
 }
@@ -106,4 +110,160 @@
 
 .car-request-link:hover {
   text-decoration: underline;
+}
+
+.car-request-muted {
+  color: #66777c;
+}
+
+.car-request-error {
+  margin-bottom: 1rem;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(176, 0, 32, 0.08);
+  border: 1px solid rgba(176, 0, 32, 0.35);
+  color: #8f0018;
+  font-weight: 600;
+}
+
+.car-request-auth-hint {
+  margin-bottom: 1rem;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(161, 214, 226, 0.35);
+  border: 1px solid rgba(25, 149, 173, 0.35);
+  color: #23424a;
+  line-height: 1.45;
+}
+
+.car-request-auth-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.car-request-type-hint {
+  margin: -0.25rem 0 0.5rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f4fafb;
+  border: 1px dashed rgba(25, 149, 173, 0.45);
+  color: #3a5056;
+  font-weight: 500;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.car-request-notice--success {
+  background: rgba(161, 214, 226, 0.35);
+  border-color: rgba(25, 149, 173, 0.45);
+}
+
+.car-request-input:disabled,
+.car-request-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Выпадающие списки */
+.car-request-select-wrap,
+.car-request-date-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.car-request-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--color-primary);
+  pointer-events: none;
+}
+
+.car-request-select {
+  width: 100%;
+  min-height: 44px;
+  padding-right: 2.5rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fbfefe;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.car-request-select:hover {
+  border-color: rgba(25, 149, 173, 0.55);
+}
+
+.car-request-select option {
+  color: #20383f;
+  background: #fff;
+  padding: 8px;
+}
+
+/* Поле даты (календарь) */
+.car-request-date-wrap::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  background-color: var(--color-primary);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1zm12 8H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9zM7 6H6a1 1 0 0 0-1 1v2h14V7a1 1 0 0 0-1-1h-1v1a1 1 0 1 1-2 0V6H9v1a1 1 0 0 1-2 0V6z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1zm12 8H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9zM7 6H6a1 1 0 0 0-1 1v2h14V7a1 1 0 0 0-1-1h-1v1a1 1 0 1 1-2 0V6H9v1a1 1 0 0 1-2 0V6z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.car-request-date {
+  width: 100%;
+  min-height: 44px;
+  padding-right: 2.75rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fbfefe;
+  color-scheme: light;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.car-request-date:hover {
+  border-color: rgba(25, 149, 173, 0.55);
+}
+
+.car-request-date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.car-request-date::-webkit-datetime-edit {
+  color: #20383f;
+}
+
+.car-request-date::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+.car-request-date:focus::-webkit-datetime-edit {
+  color: #23424a;
 }

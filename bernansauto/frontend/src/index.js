@@ -14,7 +14,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import ContactsPage from './pages/ContactsPage';
 import NewsPage from './pages/NewsPage';
 import ServicesPage from './pages/ServicesPage';
-import CarPurchaseRequestPage from './pages/CarPurchaseRequestPage';
+import ApplicationRequestPage from './pages/ApplicationRequestPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -33,7 +33,8 @@ root.render(
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/services" element={<ServicesPage />} />
-        <Route path="/request-car" element={<CarPurchaseRequestPage />} />
+        <Route path="/request-car/:vehicleId" element={<ApplicationRequestPage vehicleKind="car" />} />
+        <Route path="/request-moto/:vehicleId" element={<ApplicationRequestPage vehicleKind="moto" />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

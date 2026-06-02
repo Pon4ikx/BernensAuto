@@ -1,3 +1,17 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = []
+from .views import (
+    CarApplicationViewSet,
+    MotoApplicationViewSet,
+    OnlineCarEvaluationViewSet,
+)
+
+router = DefaultRouter()
+router.register(r"car-applications", CarApplicationViewSet, basename="car_application")
+router.register(r"moto-applications", MotoApplicationViewSet, basename="moto_application")
+router.register(r"online-car-evaluations", OnlineCarEvaluationViewSet, basename="online_car_evaluation")
+
+urlpatterns = [
+    path("", include(router.urls)),
+]

@@ -249,3 +249,296 @@ body.change-list #content-main tr.current-model td a {
     color: var(--bernans-primary) !important;
     font-weight: 600;
 }
+
+/* File upload — стиль как кнопки на сайте */
+.bernans-file-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0 4px;
+}
+
+.bernans-file-existing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 100%;
+}
+
+.bernans-file-path {
+    font-size: 0.9rem;
+    color: #23424a;
+    word-break: break-all;
+}
+
+.bernans-file-preview {
+    display: block;
+    max-height: 120px;
+    max-width: 200px;
+    object-fit: contain;
+    border: 1px solid var(--bernans-border);
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+}
+
+.bernans-inline-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.bernans-inline-preview-empty {
+    color: #999;
+}
+
+td.field-photo_preview,
+td.field-image_preview {
+    vertical-align: middle;
+    min-width: 140px;
+}
+
+/* В колонке «Фото» — только кнопка и имя файла, без дублирующего превью */
+.bernans-file-wrap--inline-photo .bernans-file-live,
+.bernans-file-wrap--inline-photo .bernans-file-existing img,
+td.field-photo > img,
+td.field-photo p img,
+td.field-photo .file-upload img,
+td.field-image > img,
+td.field-image p img {
+    display: none !important;
+}
+
+.bernans-file-wrap--inline-photo {
+    flex-direction: row;
+    align-items: center;
+}
+
+.bernans-file-wrap--inline-photo .bernans-file-meta {
+    font-size: 0.85rem;
+    color: #60747a;
+}
+
+.bernans-file-wrap--inline-photo .bernans-file-meta a {
+    word-break: break-all;
+}
+
+/* Массовая загрузка фото в инлайне */
+.bernans-bulk-photo {
+    margin: 0 0 1rem;
+    padding: 1rem 1.1rem;
+    background: #eef6f7;
+    border: 1px solid var(--bernans-border);
+    border-radius: 8px;
+}
+
+.bernans-bulk-photo-title {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+    color: var(--bernans-primary-dark);
+}
+
+.bernans-bulk-photo-hint {
+    margin: 0 0 0.75rem;
+    font-size: 0.88rem;
+    color: #60747a;
+}
+
+.bernans-bulk-photo-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+label.bernans-bulk-photo-btn {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 20px !important;
+    margin: 0 !important;
+    background: var(--bernans-primary);
+    color: #fff !important;
+    border: 1px solid var(--bernans-primary);
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(20, 122, 143, 0.22);
+}
+
+label.bernans-bulk-photo-btn:hover {
+    background: var(--bernans-primary-dark);
+    border-color: var(--bernans-primary-dark);
+}
+
+.bernans-bulk-photo-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.bernans-bulk-photo-status {
+    font-size: 0.9rem;
+    color: #23424a;
+}
+
+.bernans-file-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Перебиваем django admin: label { display: block } */
+form .aligned label.bernans-file-btn,
+#content-main label.bernans-file-btn,
+label.bernans-file-btn {
+    position: relative;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box;
+    width: auto !important;
+    min-width: 0;
+    max-width: none !important;
+    height: 40px;
+    min-height: 40px;
+    padding: 0 20px !important;
+    margin: 0 !important;
+    float: none !important;
+    background: var(--bernans-primary);
+    color: #fff;
+    border: 1px solid var(--bernans-primary);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(20, 122, 143, 0.22);
+    user-select: none;
+}
+
+label.bernans-file-btn:hover {
+    background: var(--bernans-primary-dark);
+    border-color: var(--bernans-primary-dark);
+    box-shadow: 0 6px 16px rgba(20, 122, 143, 0.28);
+}
+
+label.bernans-file-btn:focus-within {
+    outline: 2px solid var(--bernans-accent);
+    outline-offset: 2px;
+}
+
+/* Иконка слева, текст справа — в одну линию по центру */
+.bernans-file-btn-inner {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+    line-height: 1;
+}
+
+.bernans-file-btn-text {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.bernans-file-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    line-height: 0;
+}
+
+.bernans-file-btn-icon svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+/* input не участвует во flex-раскладке кнопки */
+label.bernans-file-btn input[type="file"],
+label.bernans-file-btn input[type="file"].bernans-file-enhanced {
+    position: absolute;
+    inset: 0;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 0;
+    z-index: 2;
+}
+
+.bernans-file-name {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 40px;
+    min-height: 40px;
+    max-width: min(360px, 100%);
+    padding: 0 14px;
+    margin: 0;
+    color: #60747a;
+    font-size: 0.9rem;
+    line-height: 1;
+    background: #eef6f7;
+    border: 1px solid var(--bernans-border);
+    border-radius: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bernans-file-name--selected {
+    color: #23424a;
+    font-weight: 500;
+    border-color: var(--bernans-accent);
+    background: rgba(161, 214, 226, 0.28);
+}
+
+/* Скрыть нативный вид у необработанных file (на всякий случай) */
+form input[type="file"]:not(.bernans-file-enhanced)::file-selector-button {
+    padding: 8px 18px;
+    margin-right: 12px;
+    border: 1px solid var(--bernans-primary);
+    border-radius: 6px;
+    background: var(--bernans-primary);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+form input[type="file"]:not(.bernans-file-enhanced)::file-selector-button:hover {
+    background: var(--bernans-primary-dark);
+    border-color: var(--bernans-primary-dark);
+}

@@ -69,6 +69,107 @@
   color: #666;
 }
 
+.profile-applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.profile-application-card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fbfefe 0%, #f4fafb 100%);
+  box-shadow: 0 4px 14px rgba(20, 122, 143, 0.08);
+}
+
+.profile-application-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 8px;
+}
+
+.profile-application-kind {
+  display: inline-block;
+  margin-bottom: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #147a8f;
+  background: rgba(25, 149, 173, 0.14);
+}
+
+.profile-application-car {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #23424a;
+  text-decoration: none;
+}
+
+.profile-application-car:hover {
+  color: var(--color-primary);
+}
+
+.profile-application-type {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.profile-application-status {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.profile-application-status.status-new {
+  background: rgba(25, 149, 173, 0.18);
+  color: #147a8f;
+}
+
+.profile-application-status.status-progress {
+  background: rgba(255, 193, 7, 0.22);
+  color: #8a6d00;
+}
+
+.profile-application-status.status-waiting {
+  background: rgba(123, 97, 255, 0.16);
+  color: #5340a8;
+}
+
+.profile-application-status.status-done {
+  background: rgba(46, 125, 50, 0.16);
+  color: #2e7d32;
+}
+
+.profile-application-status.status-cancelled {
+  background: rgba(120, 120, 120, 0.16);
+  color: #555;
+}
+
+.profile-application-summary {
+  margin: 0 0 8px;
+  color: #3a5056;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.profile-application-date {
+  font-size: 0.85rem;
+  color: #60747a;
+}
+
 .profile-favorites-list {
   display: flex;
   flex-direction: column;
