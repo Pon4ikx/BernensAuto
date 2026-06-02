@@ -5,6 +5,7 @@ import '../styles/MainPage.css';
 import '../styles/CarsPage.css';
 import '../styles/Breadcrumbs.css';
 import SiteHeader from '../components/SiteHeader';
+import { formatMotoEngineVolume } from '../utils/motoFormat';
 
 function toNumber(value) {
   if (value === '' || value === null || value === undefined) return null;
@@ -369,7 +370,7 @@ export default function MotorcyclesPage() {
                         <span>{m.year} г.</span>
                         <span>{Number(m.mileage || 0).toLocaleString()} км</span>
                         {m.moto_type ? <span>{m.moto_type}</span> : null}
-                        {m.engine_volume ? <span>{Number(m.engine_volume)} л</span> : null}
+                        {m.engine_volume ? <span>{formatMotoEngineVolume(m.engine_volume)}</span> : null}
                       </div>
                       <div className="catalog-card-price">
                         <div className="price-byn">{m.price_byn ? `${Number(m.price_byn).toLocaleString()} BYN` : '—'}</div>

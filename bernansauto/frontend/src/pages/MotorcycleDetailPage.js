@@ -5,6 +5,7 @@ import '../styles/MainPage.css';
 import '../styles/CarsPage.css';
 import '../styles/Breadcrumbs.css';
 import SiteHeader from '../components/SiteHeader';
+import { formatMotoEngineVolume } from '../utils/motoFormat';
 
 function resolveMediaUrl(url) {
   if (!url) return null;
@@ -215,7 +216,7 @@ export default function MotorcycleDetailPage() {
                       {moto.engine_volume && (
                         <div>
                           <div className="car-detail-spec-label">Объём двигателя</div>
-                          <div className="car-detail-spec-value">{Number(moto.engine_volume)} л</div>
+                          <div className="car-detail-spec-value">{formatMotoEngineVolume(moto.engine_volume)}</div>
                         </div>
                       )}
                     </div>

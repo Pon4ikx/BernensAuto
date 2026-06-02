@@ -86,7 +86,11 @@ class Motorcycle(models.Model):
     engine_type = models.CharField(max_length=50, blank=True, verbose_name="Двигатель")
 
     engine_volume = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True, verbose_name="Объём двигателя"
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Объём двигателя (куб. см.)",
     )
     moto_type = models.CharField(
         max_length=50, blank=True, verbose_name="Тип", choices=MOTO_TYPE_CHOICES

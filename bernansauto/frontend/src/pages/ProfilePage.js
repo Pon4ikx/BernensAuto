@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
 import OnlineCarEvaluationPanel from '../components/OnlineCarEvaluationPanel';
 import { api } from '../api';
+import { formatMotoEngineVolume } from '../utils/motoFormat';
 import '../styles/ProfilePage.css';
 
 function resolveMediaUrl(url) {
@@ -467,7 +468,7 @@ export default function ProfilePage() {
                     <div className="profile-favorite-meta">
                       {Number(moto.mileage || 0).toLocaleString()} км
                       {moto.moto_type ? ` • ${moto.moto_type}` : ''}
-                      {moto.engine_volume ? ` • ${Number(moto.engine_volume)} л` : ''}
+                      {moto.engine_volume ? ` • ${formatMotoEngineVolume(moto.engine_volume)}` : ''}
                     </div>
                   </div>
                 </Link>
