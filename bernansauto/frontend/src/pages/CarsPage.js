@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api';
 import '../styles/MainPage.css';
 import '../styles/CarsPage.css';
@@ -19,7 +19,20 @@ function resolveMediaUrl(url) {
   return `http://127.0.0.1:8000${url}`;
 }
 
+function filtersFromSearchParams(searchParams) {
+  return {
+    priceFromUsd: searchParams.get('priceFrom') || '',
+    priceToUsd: searchParams.get('priceTo') || '',
+    marka: searchParams.get('marka') || '',
+    model: searchParams.get('model') || '',
+    yearFrom: searchParams.get('yearFrom') || '',
+    yearTo: searchParams.get('yearTo') || '',
+    availableOnly: searchParams.get('availableOnly') !== '0',
+  };
+}
+
 export default function CarsPage() {
+  const [searchParams] = useSearchParams();
   const [cars, setCars] = useState([]);
   const [carPhotos, setCarPhotos] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -38,6 +51,13 @@ export default function CarsPage() {
   });
 
   const [appliedFilters, setAppliedFilters] = useState(draftFilters);
+
+  useEffect(() => {
+    if (!searchParams.toString()) return;
+    const fromUrl = filtersFromSearchParams(searchParams);
+    setDraftFilters(fromUrl);
+    setAppliedFilters(fromUrl);
+  }, [searchParams]);
 
   useEffect(() => {
     let isMounted = true;

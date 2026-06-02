@@ -373,14 +373,14 @@ body {
     max-width: 900px;
     margin: 0 auto;
     align-items: flex-end;
+    justify-content: center;
 }
 
 .search-filters-fields {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    flex: 1;
-    min-width: 200px;
+    justify-content: center;
 }
 
 .search-filters-fields select {
@@ -399,7 +399,7 @@ body {
 }
 
 .search-filters-submit {
-    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .search-filters-submit .btn-primary {
@@ -535,10 +535,78 @@ body {
 
 .section-footer {
     text-align: center;
+    margin-top: 2.5rem;
 }
 
 .section-footer .btn-primary {
     padding: 14px 32px;
+}
+
+.home-news-section {
+    padding-top: 3.5rem;
+}
+
+.home-news-muted {
+    text-align: center;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.home-news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.home-news-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.home-news-card-image-wrap {
+    height: 160px;
+    background: #eef6f7;
+}
+
+.home-news-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.home-news-card-body {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-news-card-date {
+    font-size: 0.85rem;
+    color: #60747a;
+    margin-bottom: 0.5rem;
+}
+
+.home-news-card-body h3 {
+    color: var(--color-primary);
+    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+}
+
+.home-news-card-body p {
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* ========== Услуги («Что мы предлагаем») ========== */
@@ -705,7 +773,6 @@ body {
     }
 
     .search-filters-submit {
-        margin-left: 0;
         width: 100%;
         text-align: center;
     }
@@ -723,6 +790,22 @@ body {
     .cars-grid,
     .motos-grid {
         grid-template-columns: 1fr;
+    }
+
+    .home-news-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .home-news-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+    .home-news-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

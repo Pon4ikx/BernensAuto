@@ -253,10 +253,148 @@ body.change-list #content-main tr.current-model td a {
 /* File upload — стиль как кнопки на сайте */
 .bernans-file-wrap {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0 4px;
+}
+
+.bernans-file-existing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 100%;
+}
+
+.bernans-file-path {
+    font-size: 0.9rem;
+    color: #23424a;
+    word-break: break-all;
+}
+
+.bernans-file-preview {
+    display: block;
+    max-height: 120px;
+    max-width: 200px;
+    object-fit: contain;
+    border: 1px solid var(--bernans-border);
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+}
+
+.bernans-inline-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.bernans-inline-preview-empty {
+    color: #999;
+}
+
+td.field-photo_preview,
+td.field-image_preview {
+    vertical-align: middle;
+    min-width: 140px;
+}
+
+/* В колонке «Фото» — только кнопка и имя файла, без дублирующего превью */
+.bernans-file-wrap--inline-photo .bernans-file-live,
+.bernans-file-wrap--inline-photo .bernans-file-existing img,
+td.field-photo > img,
+td.field-photo p img,
+td.field-photo .file-upload img,
+td.field-image > img,
+td.field-image p img {
+    display: none !important;
+}
+
+.bernans-file-wrap--inline-photo {
+    flex-direction: row;
+    align-items: center;
+}
+
+.bernans-file-wrap--inline-photo .bernans-file-meta {
+    font-size: 0.85rem;
+    color: #60747a;
+}
+
+.bernans-file-wrap--inline-photo .bernans-file-meta a {
+    word-break: break-all;
+}
+
+/* Массовая загрузка фото в инлайне */
+.bernans-bulk-photo {
+    margin: 0 0 1rem;
+    padding: 1rem 1.1rem;
+    background: #eef6f7;
+    border: 1px solid var(--bernans-border);
+    border-radius: 8px;
+}
+
+.bernans-bulk-photo-title {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+    color: var(--bernans-primary-dark);
+}
+
+.bernans-bulk-photo-hint {
+    margin: 0 0 0.75rem;
+    font-size: 0.88rem;
+    color: #60747a;
+}
+
+.bernans-bulk-photo-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+label.bernans-bulk-photo-btn {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 20px !important;
+    margin: 0 !important;
+    background: var(--bernans-primary);
+    color: #fff !important;
+    border: 1px solid var(--bernans-primary);
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(20, 122, 143, 0.22);
+}
+
+label.bernans-bulk-photo-btn:hover {
+    background: var(--bernans-primary-dark);
+    border-color: var(--bernans-primary-dark);
+}
+
+.bernans-bulk-photo-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.bernans-bulk-photo-status {
+    font-size: 0.9rem;
+    color: #23424a;
+}
+
+.bernans-file-controls {
+    display: flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin: 6px 0 4px;
 }
 
 /* Перебиваем django admin: label { display: block } */
