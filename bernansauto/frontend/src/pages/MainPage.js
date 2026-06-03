@@ -5,6 +5,28 @@ import { api } from '../api';
 import '../styles/MainPage.css';
 
 const DEFAULT_NEWS_IMAGE = `${process.env.PUBLIC_URL || ''}/news.png`;
+const PUBLIC_URL = process.env.PUBLIC_URL || '';
+
+const SLIDES = [
+    {
+        image: `${PUBLIC_URL}/slider1.jpg`,
+        title: 'Премиальные автомобили',
+        subtitle: 'Лучший выбор для взыскательных клиентов',
+        catalogLink: '/cars',
+    },
+    {
+        image: `${PUBLIC_URL}/slider2.jpg`,
+        title: 'Выгодные условия',
+        subtitle: 'Кредитование и трейд-ин',
+        catalogLink: '/cars',
+    },
+    {
+        image: `${PUBLIC_URL}/slider3.jpg`,
+        title: 'Мототехника',
+        subtitle: 'Мотоциклы и скутеры в наличии',
+        catalogLink: '/motorcycles',
+    },
+];
 
 const PRICE_FROM_OPTIONS = ['5000', '10000', '20000', '50000'];
 const PRICE_TO_OPTIONS = ['20000', '50000', '100000', '150000'];
@@ -53,28 +75,6 @@ const MainPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Данные для слайдера
-    const slides = [
-        {
-            image: 'https://via.placeholder.com/1200x600.png?text=Slide+1',
-            title: 'Премиальные автомобили',
-            subtitle: 'Лучший выбор для взыскательных клиентов',
-            catalogLink: '/cars',
-        },
-        {
-            image: 'https://via.placeholder.com/1200x600.png?text=Slide+2',
-            title: 'Выгодные условия',
-            subtitle: 'Кредитование и трейд-ин',
-            catalogLink: '/cars',
-        },
-        {
-            image: 'https://via.placeholder.com/1200x600.png?text=Slide+3',
-            title: 'Мототехника',
-            subtitle: 'Мотоциклы и скутеры в наличии',
-            catalogLink: '/motorcycles',
-        }
-    ];
-
     // Услуги
     const services = [
         { icon: '🚗', title: 'Продажа авто', description: 'Широкий выбор новых и подержанных автомобилей' },
@@ -82,13 +82,6 @@ const MainPage = () => {
         { icon: '🔄', title: 'Трейд-ин', description: 'Обмен вашего авто на новый' },
         { icon: '🏍️', title: 'Мототехника', description: 'Мотоциклы, скутеры, квадроциклы' }
     ];
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length);
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [slides.length]);
 
     useEffect(() => {
         let isMounted = true;
@@ -167,6 +160,13 @@ const MainPage = () => {
         return map;
     }, [motoPhotos]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
     // Если перешли на главную по ссылке вида "/#services" — аккуратно скроллим к секции.
     useEffect(() => {
         if (!location.hash) return;
@@ -180,8 +180,8 @@ const MainPage = () => {
         return () => clearTimeout(t);
     }, [location.hash]);
 
-    const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-    const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
 
     const openAuthPanel = () => {
         window.dispatchEvent(new CustomEvent('open-auth-panel', { detail: { tab: 'login' } }));
@@ -235,7 +235,7 @@ const MainPage = () => {
 
             {/* Hero Slider */}
             <section className="hero-slider">
-                {slides.map((slide, index) => (
+                {SLIDES.map((slide, index) => (
                     <div
                         key={index}
                         className={`slide ${index === currentSlide ? 'active' : ''}`}
@@ -255,7 +255,7 @@ const MainPage = () => {
                 <button className="slider-nav next" onClick={nextSlide}>›</button>
 
                 <div className="slider-dots">
-                    {slides.map((_, index) => (
+                    {SLIDES.map((_, index) => (
                         <button
                             key={index}
                             className={`dot ${index === currentSlide ? 'active' : ''}`}
