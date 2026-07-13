@@ -3,9 +3,15 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { api } from '../api';
+import {
+  excerptNewsText,
+  formatNewsDate,
+  getNewsImageSrc,
+  handleNewsImageError,
+  resolveMediaUrl,
+} from '../utils/news';
 import '../styles/MainPage.css';
 
-const DEFAULT_NEWS_IMAGE = `${process.env.PUBLIC_URL || ''}/news.png`;
 const PUBLIC_URL = process.env.PUBLIC_URL || '';
 
 const SLIDES = [
@@ -31,31 +37,6 @@ const SLIDES = [
 
 const PRICE_FROM_OPTIONS = ['5000', '10000', '20000', '50000'];
 const PRICE_TO_OPTIONS = ['20000', '50000', '100000', '150000'];
-
-function resolveMediaUrl(url) {
-    if (!url) return null;
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    const path = url.startsWith('/') ? url : `/${url}`;
-    return `http://127.0.0.1:8000${path}`;
-}
-
-function formatNewsDate(iso) {
-    if (!iso) return '';
-    try {
-        return new Date(iso).toLocaleString('ru-RU', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        });
-    } catch {
-        return iso;
-    }
-}
-
-function getNewsImageSrc(photo) {
-    const media = resolveMediaUrl(photo);
-    return media || DEFAULT_NEWS_IMAGE;
-}
 
 const MainPage = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -213,13 +194,6 @@ const MainPage = () => {
             // not logged in
         }
         openAuthPanel();
-    };
-
-    const handleNewsImageError = (event) => {
-        const img = event.currentTarget;
-        if (img.dataset.fallbackApplied === '1') return;
-        img.dataset.fallbackApplied = '1';
-        img.src = DEFAULT_NEWS_IMAGE;
     };
 
     const formatPrice = (price) => {
@@ -419,7 +393,7 @@ const MainPage = () => {
                     {!newsLoading && latestNews.length > 0 && (
                         <div className="home-news-grid">
                             {latestNews.map((item) => (
-                                <article key={item.id} className="home-news-card">
+                                <Link key={item.id} to={`/news/${item.id}`} className="home-news-card home-news-card-link">
                                     <div className="home-news-card-image-wrap">
                                         <img
                                             src={getNewsImageSrc(item.photo)}
@@ -433,9 +407,10 @@ const MainPage = () => {
                                             {formatNewsDate(item.published_at)}
                                         </time>
                                         <h3>{item.title}</h3>
-                                        <p>{item.text}</p>
+                                        <p>{excerptNewsText(item.text, 160)}</p>
+                                        <span className="home-news-card-more">Читать далее</span>
                                     </div>
-                                </article>
+                                </Link>
                             ))}
                         </div>
                     )}

@@ -1,45 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { api } from '../api';
+import {
+  excerptNewsText,
+  formatNewsDate,
+  getNewsImageSrc,
+  handleNewsImageError,
+} from '../utils/news';
 import '../styles/NewsPage.css';
-
-const DEFAULT_NEWS_IMAGE = `${process.env.PUBLIC_URL || ''}/news.png`;
-
-function resolveMediaUrl(url) {
-  if (!url) return null;
-  if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  const path = url.startsWith('/') ? url : `/${url}`;
-  return `http://127.0.0.1:8000${path}`;
-}
-
-function getNewsImageSrc(photo) {
-  const media = resolveMediaUrl(photo);
-  return media || DEFAULT_NEWS_IMAGE;
-}
-
-function handleNewsImageError(event) {
-  const img = event.currentTarget;
-  if (img.dataset.fallbackApplied === '1') return;
-  img.dataset.fallbackApplied = '1';
-  img.src = DEFAULT_NEWS_IMAGE;
-}
-
-function formatDate(iso) {
-  if (!iso) return '';
-  try {
-    return new Date(iso).toLocaleString('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return iso;
-  }
-}
 
 export default function NewsPage() {
   const [items, setItems] = useState([]);
@@ -97,8 +68,9 @@ export default function NewsPage() {
               {items.map((n) => {
                 const img = getNewsImageSrc(n.photo);
                 const alt = n.title || 'Новость Bernans Auto';
+                const preview = excerptNewsText(n.text);
                 return (
-                  <article key={n.id} className="news-card">
+                  <Link key={n.id} to={`/news/${n.id}`} className="news-card news-card-link">
                     <div className="news-card-image-wrap">
                       <img
                         src={img}
@@ -109,12 +81,13 @@ export default function NewsPage() {
                     </div>
                     <div className="news-card-body">
                       <time className="news-card-date" dateTime={n.published_at}>
-                        {formatDate(n.published_at)}
+                        {formatNewsDate(n.published_at, { withTime: true })}
                       </time>
                       <h2 className="news-card-title">{n.title}</h2>
-                      <div className="news-card-text">{n.text}</div>
+                      <p className="news-card-text">{preview}</p>
+                      <span className="news-card-more">Читать далее</span>
                     </div>
-                  </article>
+                  </Link>
                 );
               })}
             </div>

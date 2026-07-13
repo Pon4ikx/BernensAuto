@@ -13,6 +13,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ContactsPage from './pages/ContactsPage';
 import NewsPage from './pages/NewsPage';
+import NewsDetailPage from './pages/NewsDetailPage';
 import ServicesPage from './pages/ServicesPage';
 import ApplicationRequestPage from './pages/ApplicationRequestPage';
 
@@ -32,6 +33,7 @@ root.render(
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/news/:id" element={<NewsDetailPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/request-car/:vehicleId" element={<ApplicationRequestPage vehicleKind="car" />} />
         <Route path="/request-moto/:vehicleId" element={<ApplicationRequestPage vehicleKind="moto" />} />
