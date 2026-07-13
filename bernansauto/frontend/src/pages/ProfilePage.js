@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import OnlineCarEvaluationPanel from '../components/OnlineCarEvaluationPanel';
 import { api } from '../api';
 import { formatMotoEngineVolume } from '../utils/motoFormat';
@@ -636,6 +637,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
+      <SiteFooter />
       {isDeleteModalOpen && (
         <div className="delete-modal-overlay" role="presentation" onClick={() => setIsDeleteModalOpen(false)}>
           <div className="delete-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>

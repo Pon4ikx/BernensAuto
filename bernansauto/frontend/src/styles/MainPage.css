@@ -712,41 +712,6 @@ body {
     color: var(--color-primary);
 }
 
-/* ========== Footer ========== */
-.footer {
-    background: var(--color-primary-dark);
-    color: white;
-    padding: 3rem 0 1rem;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.footer-section h3,
-.footer-section h4 {
-    margin-bottom: 0.75rem;
-    color: var(--color-accent);
-    font-size: 1rem;
-}
-
-.footer-section p {
-    margin-bottom: 0.4rem;
-    opacity: 0.9;
-    font-size: 0.95rem;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    opacity: 0.85;
-    font-size: 0.9rem;
-}
-
 /* ========== Адаптив ========== */
 @media (max-width: 768px) {
     .hero-slider {
