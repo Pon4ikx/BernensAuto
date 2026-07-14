@@ -1,7 +1,5 @@
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.core import signing
-from django.core.mail import send_mail
-from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status, viewsets
@@ -9,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .emails import send_password_reset_email, send_verification_email
 from .models import User
 from .serializers import AccountSettingsSerializer, RegisterSerializer, UserSerializer
 
@@ -22,58 +21,33 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
 
-    def _send_verification_email(self, user):
-        signer = signing.TimestampSigner(salt='accounts.email_verification')
-        token = signer.sign(str(user.id))
-        verify_url = f"{settings.FRONTEND_BASE_URL.rstrip('/')}/verify-email?token={token}"
-
-        html = f"""
-        <div style="font-family: Arial, sans-serif; line-height: 1.55; color: #20383f;">
-          <h2 style="margin: 0 0 12px; color: #1995AD;">Подтверждение email</h2>
-          <p style="margin: 0 0 10px;">Здравствуйте, <strong>{user.username}</strong>!</p>
-          <p style="margin: 0 0 14px;">
-            Чтобы завершить регистрацию, перейдите по <a href="{verify_url}" style="color: #1995AD; font-weight: 700;">ссылке</a>.
-          </p>
-          <div style="margin: 18px 0 10px;">
-            <a href="{verify_url}" style="display: inline-block; background: #1995AD; color: #fff; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 700;">
-              Подтвердить email
-            </a>
-          </div>
-          <p style="margin: 14px 0 0; color: #66777c; font-size: 12px;">
-            Если вы не регистрировались на Bernans Auto — просто проигнорируйте это письмо.
-          </p>
-        </div>
-        """
-
-        send_mail(
-            subject='Подтверждение email для Bernans Auto',
-            message=(
-                f'Здравствуйте, {user.username}!\n\n'
-                f'Чтобы завершить регистрацию, подтвердите email по ссылке.\n\n'
-                f'{verify_url}\n\n'
-                'Если вы не регистрировались на Bernans Auto, просто проигнорируйте это письмо.'
-            ),
-            from_email=None,
-            recipient_list=[user.email],
-            html_message=html,
-            fail_silently=False,
-        )
-
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        try:
-            self._send_verification_email(user)
-        except Exception:
-            user.delete()
-            return Response(
-                {'detail': 'Не удалось отправить письмо подтверждения. Попробуйте позже.'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        send_verification_email(user)
         return Response(
             {'detail': 'Письмо с подтверждением отправлено на email.'},
             status=status.HTTP_201_CREATED,
+        )
+
+
+class ResendVerificationEmailView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        email = (request.data.get('email') or '').strip().lower()
+        if not email:
+            return Response({'detail': 'Введите email.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(email__iexact=email, is_active=False).first()
+        if user:
+            send_verification_email(user)
+
+        return Response(
+            {'detail': 'Если аккаунт существует и email ещё не подтверждён, мы отправили новое письмо.'},
+            status=status.HTTP_200_OK,
         )
 
 
@@ -199,48 +173,7 @@ class PasswordResetRequestView(APIView):
         if not user:
             return Response({"detail": "Пользователь с таким email не найден."}, status=status.HTTP_404_NOT_FOUND)
 
-        signer = signing.TimestampSigner(salt='accounts.password_reset')
-        token = signer.sign(str(user.id))
-        reset_url = f"{settings.FRONTEND_BASE_URL.rstrip('/')}/reset-password?token={token}"
-
-        html = f"""
-        <div style="font-family: Arial, sans-serif; line-height: 1.55; color: #20383f;">
-          <h2 style="margin: 0 0 12px; color: #1995AD;">Сброс пароля</h2>
-          <p style="margin: 0 0 10px;">Здравствуйте, <strong>{user.username}</strong>!</p>
-          <p style="margin: 0 0 14px;">
-            Чтобы сбросить пароль, перейдите по <a href="{reset_url}" style="color: #1995AD; font-weight: 700;">ссылке</a>.
-          </p>
-          <div style="margin: 18px 0 10px;">
-            <a href="{reset_url}" style="display: inline-block; background: #1995AD; color: #fff; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-weight: 700;">
-              Сбросить пароль
-            </a>
-          </div>
-          <p style="margin: 14px 0 0; color: #66777c; font-size: 12px;">
-            Если вы не запрашивали сброс пароля — просто проигнорируйте это письмо.
-          </p>
-        </div>
-        """
-
-        try:
-            send_mail(
-                subject='Сброс пароля Bernans Auto',
-                message=(
-                    f'Здравствуйте, {user.username}!\n\n'
-                    f'Чтобы сбросить пароль, перейдите по ссылке.\n\n'
-                    f'{reset_url}\n\n'
-                    'Если вы не запрашивали сброс пароля — просто проигнорируйте это письмо.'
-                ),
-                from_email=None,
-                recipient_list=[user.email],
-                html_message=html,
-                fail_silently=False,
-            )
-        except Exception:
-            return Response(
-                {"detail": "Не удалось отправить письмо. Проверьте настройки почты и попробуйте позже."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
+        send_password_reset_email(user)
         return Response({"detail": "Мы отправили письмо со ссылкой для сброса пароля."}, status=status.HTTP_200_OK)
 
 

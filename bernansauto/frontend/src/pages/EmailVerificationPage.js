@@ -12,6 +12,28 @@ export default function EmailVerificationPage() {
 
   const [status, setStatus] = useState(token ? 'verifying' : 'idle');
   const [message, setMessage] = useState('');
+  const [resendStatus, setResendStatus] = useState('idle');
+  const [resendMessage, setResendMessage] = useState('');
+
+  const handleResend = async () => {
+    if (!email) {
+      setResendStatus('error');
+      setResendMessage('Email не указан. Попробуйте зарегистрироваться снова.');
+      return;
+    }
+
+    setResendStatus('loading');
+    setResendMessage('');
+    try {
+      const { data } = await api.post('accounts/resend-verification/', { email });
+      setResendStatus('success');
+      setResendMessage(data?.detail || 'Письмо отправлено повторно.');
+    } catch (error) {
+      const detail = error?.response?.data?.detail || 'Не удалось отправить письмо повторно.';
+      setResendStatus('error');
+      setResendMessage(detail);
+    }
+  };
 
   useEffect(() => {
     if (!token) return;
@@ -51,6 +73,23 @@ export default function EmailVerificationPage() {
                   Мы отправили письмо со ссылкой для подтверждения
                   {email ? ` на ${email}` : ''}. Перейдите по ссылке из письма, чтобы завершить регистрацию.
                 </p>
+                {email && (
+                  <div className="email-verification-resend">
+                    <button
+                      type="button"
+                      className="btn-outline"
+                      onClick={handleResend}
+                      disabled={resendStatus === 'loading'}
+                    >
+                      {resendStatus === 'loading' ? 'Отправляем…' : 'Отправить письмо ещё раз'}
+                    </button>
+                    {resendMessage && (
+                      <p className={`email-verification-resend-msg email-verification-resend-msg--${resendStatus}`}>
+                        {resendMessage}
+                      </p>
+                    )}
+                  </div>
+                )}
               </>
             )}
 

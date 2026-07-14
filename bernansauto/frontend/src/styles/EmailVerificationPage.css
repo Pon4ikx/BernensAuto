@@ -1,10 +1,9 @@
 .email-verification-page {
-  min-height: 100vh;
   background: var(--color-bg-light);
 }
 
 .email-verification-main {
-  padding-top: 120px;
+  padding-top: var(--site-header-offset);
   padding-bottom: 40px;
 }
 
@@ -30,6 +29,23 @@
 
 .email-verification-actions {
   margin-top: 18px;
+}
+
+.email-verification-resend {
+  margin-top: 16px;
+}
+
+.email-verification-resend-msg {
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.email-verification-resend-msg--success {
+  color: #1f6b48;
+}
+
+.email-verification-resend-msg--error {
+  color: #b00020;
 }
 
 .simple-modal-overlay {

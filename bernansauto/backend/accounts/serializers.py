@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import serializers
 import re
 from .models import User
@@ -25,17 +26,33 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'phone', 'password')
 
     def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Пользователь с таким именем пользователя уже существует.")
-        return value
+        return value.strip()
 
     def validate_email(self, value):
-        email = value.strip().lower()
+        return value.strip().lower()
+
+    def validate(self, attrs):
+        username = attrs.get('username', '')
+        email = attrs.get('email', '')
+
         if not email:
-            raise serializers.ValidationError("Email обязателен для регистрации.")
-        if User.objects.filter(email__iexact=email).exists():
-            raise serializers.ValidationError("Пользователь с таким email уже существует.")
-        return email
+            raise serializers.ValidationError({'email': 'Email обязателен для регистрации.'})
+
+        conflicts = User.objects.filter(
+            Q(username=username) | Q(email__iexact=email)
+        ).only('username', 'email')
+
+        for existing in conflicts:
+            if existing.username == username:
+                raise serializers.ValidationError({
+                    'username': 'Пользователь с таким именем пользователя уже существует.',
+                })
+            if existing.email.lower() == email:
+                raise serializers.ValidationError({
+                    'email': 'Пользователь с таким email уже существует.',
+                })
+
+        return attrs
 
     def validate_password(self, value):
         if not re.search(r'[a-z]', value):
