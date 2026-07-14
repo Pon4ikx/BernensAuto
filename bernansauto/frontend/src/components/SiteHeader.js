@@ -119,7 +119,7 @@ export default function SiteHeader() {
   };
 
   return (
-    <>
+    <div className="site-header-root">
       <header className="header">
         <div className="container">
           <div className="header-content">
@@ -347,7 +347,7 @@ export default function SiteHeader() {
         </div>
       </div>
       <ScrollToTopButton />
-    </>
+    </div>
   );
 }
 

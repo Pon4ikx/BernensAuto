@@ -1,8 +1,12 @@
 .email-verification-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--color-bg-light);
 }
 
 .email-verification-main {
+  flex: 1 0 auto;
   padding-top: var(--site-header-offset);
   padding-bottom: 40px;
 }
