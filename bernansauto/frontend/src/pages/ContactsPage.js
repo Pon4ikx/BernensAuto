@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { api } from '../api';
 import '../styles/ContactsPage.css';
@@ -107,6 +108,7 @@ export default function ContactsPage() {
           )}
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

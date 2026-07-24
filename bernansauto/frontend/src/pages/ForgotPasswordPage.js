@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import { api } from '../api';
 import '../styles/EmailVerificationPage.css';
 
@@ -61,6 +62,7 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

@@ -583,6 +583,17 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
+.home-news-card-link {
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-news-card-link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(25, 149, 173, 0.12);
+}
+
 .home-news-card-image-wrap {
     height: 160px;
     background: #eef6f7;
@@ -622,6 +633,14 @@ body {
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.home-news-card-more {
+    margin-top: auto;
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 /* ========== Услуги («Что мы предлагаем») ========== */
@@ -710,41 +729,6 @@ body {
 .cta-buttons .btn-secondary:hover {
     background: white;
     color: var(--color-primary);
-}
-
-/* ========== Footer ========== */
-.footer {
-    background: var(--color-primary-dark);
-    color: white;
-    padding: 3rem 0 1rem;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.footer-section h3,
-.footer-section h4 {
-    margin-bottom: 0.75rem;
-    color: var(--color-accent);
-    font-size: 1rem;
-}
-
-.footer-section p {
-    margin-bottom: 0.4rem;
-    opacity: 0.9;
-    font-size: 0.95rem;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    opacity: 0.85;
-    font-size: 0.9rem;
 }
 
 /* ========== Адаптив ========== */

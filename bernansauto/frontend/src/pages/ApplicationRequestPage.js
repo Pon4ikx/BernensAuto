@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { api } from '../api';
 import '../styles/MainPage.css';
@@ -404,6 +405,7 @@ export default function ApplicationRequestPage({ vehicleKind = 'car' }) {
           )}
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

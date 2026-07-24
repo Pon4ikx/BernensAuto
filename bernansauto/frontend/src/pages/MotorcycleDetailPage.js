@@ -5,6 +5,7 @@ import '../styles/MainPage.css';
 import '../styles/CarsPage.css';
 import '../styles/Breadcrumbs.css';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import { formatMotoEngineVolume } from '../utils/motoFormat';
 
 function resolveMediaUrl(url) {
@@ -248,6 +249,7 @@ export default function MotorcycleDetailPage() {
           </div>
         </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

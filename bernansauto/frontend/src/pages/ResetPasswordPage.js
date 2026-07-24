@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import { api } from '../api';
 import '../styles/EmailVerificationPage.css';
 
@@ -101,6 +102,7 @@ export default function ResetPasswordPage() {
           </div>
         </div>
       </main>
+      <SiteFooter />
 
       {isSuccessModalOpen && (
         <div className="simple-modal-overlay" role="presentation" onClick={() => setIsSuccessModalOpen(false)}>
